@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}Ejemplo Proyecto{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+        {% if contenido == "Argentina" %}
+            <h1>La Ciudad Autonónoma de Buenos Aires es la capital de {{contenido}} <h1>
+        {% else %}
+            <h1>Hola {{contenido}} !!<h1>
+        {% endif %}
+            <a href="{{url_for('personas.personas_index')}}"> Issues</a>
+        </table>
+        <form action="" method="post">
+            <input type="text" name="id" placeholder="Ingrese el id">
+            <input type="text" name="user" placeholder="Ingrese el autor">
+            <input type="text" name="title" placeholder="Ingrese el título">
+            <input type="text" name="description" placeholder="Ingrese la descripción">
+            <input type="text" name="status" placeholder="Ingrese el estado">
+            <button>Enviar</button>
+        </form>
+        <a href="{{url_for('personas.personas_index')}}"> Volver al inicio
+        </a>       
+{% endblock %}

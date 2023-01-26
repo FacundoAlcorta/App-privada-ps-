@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+
+{{ super() }}
+
+{% endblock %}
+{% block content %}
+<style>
+body {
+    background-image: url("{{ url_for('static', filename='public/images/home.jpg') }}")
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<body>
+
+
+    <h2 class="center">Background Image</h2>
+    
+    <img src="public/images/home.jpg" alt="Imagen de Fondo" style="width:30%">
+    
+    </body>
+{% endblock %}

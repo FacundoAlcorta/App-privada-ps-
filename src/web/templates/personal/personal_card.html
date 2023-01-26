@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}card de Socio{% endblock %}
+
+{% block content %}
+
+<div class="container mt-3"></div>
+<div class="container">
+  <div class="row">
+    <h2>Card de personal</h2>
+    <tr>
+      <div class="mb-3 btn-primary">
+        NOMBRE: {{ personal.nombre }}
+      </div>
+      <div class="mb-3 btn-primary">
+        APELLIDO: {{ personal.apellido }}
+      </div>
+      <div class="mb-3 btn-primary">
+        DOCUMENTO: {{ personal.documento }}
+      </div>
+      {% if(personal.rol_id == 1) %}
+      <div class="mb-3 btn-primary">
+        ROL: Administrador
+      </div>
+      {% else %}
+      <div class="mb-3 btn-primary">
+        ROL: Operador
+      </div>
+      {% endif %}
+      <td><a href="{{ url_for('personal.modificar_personal', id=personal.id) }}"><button type="button" class="botonModificar btn btn-primary">Modificar personal</button></a></td>
+    
+      </tr>
+        
+    
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}Modificar Disciplina{% endblock %}
+
+{% block content %}
+    {% if error %}
+    <p style="color: red;"><strong>Error:</strong> {{ error }}
+    {% endif %}
+    <div class="container mt-3">
+        <div class="container">
+            <div class="row">
+
+        <h2>Modificar Disciplina</h2>
+        <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3 mt-3">
+            {{ form.nombre.label (class="form-label")}}:
+            {{ form.nombre (class="form-control", placeholder=disciplina.nombre ,value=disciplina.nombre) }}
+        </div>
+
+        <div class="mb-3 mt-3">
+            {{ form.categoria.label (class="form-label")}}:
+            {{ form.categoria (class="form-control", placeholder=disciplina.categoria ,value=disciplina.categoria ) }}
+        </div>
+
+        <div class="mb-3 mt-3">
+            {{ form.instructores.label (class="form-label")}}:
+            {{ form.instructores (class="form-control", placeholder=disciplina.instructores, value=disciplina.instructores ) }}
+        </div>
+
+        <div class="mb-3 mt-3">
+            {{ form.dias.label (class="form-label")}}:
+            {{ form.dias (class="form-control", placeholder=disciplina.dias, value=disciplina.dias) }}
+        </div>
+
+        <div class="mb-3 mt-3">
+            {{ form.horario.label (class="form-label")}}:
+            {{ form.horario (class="form-control", placeholder=disciplina.horario, value=disciplina.horario) }}
+        </div>
+
+        <div class="mb-3 mt-3">
+            {{ form.costo_mensual.label (class="form-label")}}:
+            {{ form.costo_mensual (class="form-control", placeholder=disciplina.costo_mensual, value=disciplina.costo_mensual) }}
+        </div>
+
+        <br>
+        {{ form.submit() }}
+        <button type="submit" class="botonModificar btn btn-primary">{{ form.submit() }}</button>
+        <a href="{{ url_for('disciplinas.index') }}"><button type="button" class="botonEliminar btn btn-primary">cancelar</button></a>       
+        </form>
+    </div>
+
+{% endblock %}

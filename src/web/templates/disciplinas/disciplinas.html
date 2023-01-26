@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}Lista de personal{% endblock %}
+
+{% block content %}
+<!--BOTONES-->
+<div class="container mt-3"></div>
+  <div class="container">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>
+            <a href="/disciplinas/agregar" class="btn btn-success float-right" onclick="">Agregar Disciplina</a>
+          </th>
+          <th>
+            <a href="{{ url_for('disciplinas.index') }}" class="btn btn-success float-right" onclick="">TODOS</a>
+          </th>
+          <th>
+            <a href="{{ url_for('disciplinas.habilitadas') }}" class="btn btn-success float-right" onclick="">Habilitadas</a>
+          </th>
+          <th>
+            <a href="{{ url_for('disciplinas.deshabilitadas') }}" class="btn btn-success float-right" onclick="">Deshabilitadas</a>
+          </th>
+        </tr>
+      </thead>
+    </table>
+
+<!--TABLA-->
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Categoria</th>
+      <th>Costo Mensual</th>
+      <th>Dias</th>
+      <th>Horario</th>
+      <th>instructores</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for disciplina in disciplina_pagination.items %}
+    <tr>
+      <td>{{ disciplina.nombre }}</td>
+      <td>{{ disciplina.categoria }}</td>
+      <td>{{ disciplina.costo_mensual }}</td>
+      <td>{{ disciplina.dias }}</td>
+      <td>{{ disciplina.horario }}</td>
+      <td>{{ disciplina.instructores }}</td>
+      <td><a href="{{ url_for('disciplinas.show_complete', id=disciplina.id) }}"><button type="button" class="botonDesbloquear btn btn-primary">Ver mas</button></a></td>
+      <td><a href="{{ url_for('disciplinas.modificar_disciplina', id=disciplina.id) }}"><button type="button" class="botonModificar btn btn-primary">Modificar</button></a></td>
+      {% if not disciplina.estado %}
+      <td><a href="{{ url_for('disciplinas.block_discipline', id=disciplina.id) }}"><button type="button" class="botonBloquear btn btn-primary">Deshabilitar</button></a></td>
+      {% else %}
+      <td><a href="{{ url_for('disciplinas.block_discipline', id=disciplina.id) }}"><button type="button" class="botonDesbloquear btn btn-primary">Habilitar</button></a></td>
+      {% endif %}
+      {% if check_permission(session.user_id,"disciplina_destroy") %}
+        <td>
+          <a href="{{ url_for('disciplinas.delete_disciplina', id=disciplina.id) }}">
+            <button type="button" class="botonEliminar btn btn-primary" onclick="_confirm('¿Seguro quieres eliminar esta disciplina?', '/disciplinas')">
+              Eliminar
+            </button>
+          </a>
+        </td>
+      {% endif %}
+    </tr>
+    {% endfor %}   
+  </tbody>
+</table>
+<div class=pagination>
+  {%- for page in disciplina_pagination.iter_pages() %}
+      {% if page %}
+          {% if page != disciplina_pagination.page %}    
+              <a href="{{ url_for(url, page=page) }}"><button type="button" class="btn btn-success float-right">{{ page }}</button></a>
+          {% else %}
+              <strong><button type="button" class="btn btn-success float-right">{{ page }}</button></strong>
+          {% endif %}
+      {% else %}
+          <span class=ellipsis>…</span>
+      {% endif %}
+  {%- endfor %}
+</div>
+    </body>
+</html>
+<script>
+  function _confirm(text, path) {
+    const ok = confirm(text);
+    if (ok) window.location = path;
+  } 
+</script>
+{% endblock %}

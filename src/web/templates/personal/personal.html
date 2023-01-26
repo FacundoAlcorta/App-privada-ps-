@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block title %}Lista de personal{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-image: url('../static/images/home.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+</style>
+<!--BOTONES-->
+<div class="container mt-3"></div>
+  <div class="container">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <!--ALTA Personal-->
+          <th>
+            <a href="/personal/agregar" class="btn btn-success float-right" onclick="">Agregar Personal</a>
+          </th>
+           <!--BUSQUEDA Personal-->
+          <th>
+            <a href="{{ url_for('personal.index') }}" class="btn btn-success float-right" onclick="">TODOS</a>
+          </th>
+          <th>
+            <a href="{{ url_for('personal.bloqueados') }}" class="btn btn-success float-right" onclick="">BLOQUEADOS</a>
+          </th>
+          <th>
+            <a href="{{ url_for('personal.desbloqueados') }}" class="btn btn-success float-right" onclick="">DESBLOQUEADOS</a>
+          </th>
+          <th>
+            <form action="{{ url_for('personal.buscar_email') }}" method="POST">
+              <input type="text" name="nombre" placeholder="email"/>
+              <input type="submit" value="buscar" class="btn btn-success float-right">
+            </form>
+          </th>
+        </tr>
+      </thead>
+    </table>  
+  </div>
+</div>
+      
+<!--TABLA-->
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Email</th>
+      <th>Fecha Inicio</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for personal in personal_pagination.items %}
+    <tr>
+      <td>{{ personal.nombre }}</td>
+      <td>{{ personal.apellido }}</td>
+      <td>{{ personal.email }}</td>
+      <td>{{ personal.fecha_inicio.strftime('%Y-%m-%d') }}</td>
+      <td><a href="{{ url_for('personal.show_complete', id=personal.id) }}"><button type="button" class="botonDesbloquear btn btn-primary">Ver mas</button></a></td>
+      <td><a href="{{ url_for('personal.modificar_personal', id=personal.id) }}"><button type="button" class="botonModificar btn btn-primary">Modificar</button></a></td>
+      {% if not personal.rol_id == 1 %}
+        {% if not personal.bloqueado %}
+        <td><a href="{{ url_for('personal.block_personal', id=personal.id) }}"><button type="button" class="botonBloquear btn btn-primary">Bloquear</button></a></td>
+        {% else %}
+        <td><a href="{{ url_for('personal.block_personal', id=personal.id) }}"><button type="button" class="botonDesbloquear btn btn-primary">Desbloquear</button></a></td>
+        {% endif %}
+      {% endif %}
+      {% if check_permission(session.user_id,"member_destroy") %}
+      <td><button type="button" class="botonEliminar btn btn-primary" onclick="_confirm('¿Seguro quieres eliminar este usuario?', '/personal')">Eliminar</button></td>
+      {% endif %}
+    </tr>
+    {% endfor %}   
+  </tbody>
+</table>
+<div class=pagination>
+  {%- for page in personal_pagination.iter_pages() %}
+      {% if page %}
+          {% if page != personal_pagination.page %}    
+              <a href="{{ url_for(url,nombre=nombre, page=page) }}"><button type="button" class="btn btn-success float-right">{{ page }}</button></a>
+          {% else %}
+              <strong><button type="button" class="btn btn-success float-right">{{ page }}</button></strong>
+          {% endif %}
+      {% else %}
+          <span class=ellipsis>…</span>
+      {% endif %}
+  {%- endfor %}
+</div>
+    </body>
+</html>
+<script>
+  function _confirm(text, path) {
+    const ok = confirm(text);
+    if (ok) window.location = path;
+  } 
+</script>
+{% endblock %}

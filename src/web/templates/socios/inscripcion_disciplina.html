@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}Lista de personal{% endblock %}
+
+{% block content %}
+
+<!--TABLA-->
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Categoria</th>
+      <th>Costo Mensual</th>
+      <th>Cronograma</th>
+      <th>instructores</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for disciplina in disciplinas %}
+    <tr>
+      <td>{{ disciplina.nombre }}</td>
+      <td>{{ disciplina.categoria }}</td>
+      <td>{{ disciplina.costo_mensual }}</td>
+      <td>{{ disciplina.cronograma }}</td>
+      <td>{{ disciplina.instructores }}</td>
+      {% if inscripto(id_socio,disciplina.id) %}
+      <td><a href="{{ url_for('socios.baja_disciplina', id_disc=disciplina.id, id_soc=id_socio) }}"><button type="button" class="botonDesbloquear btn btn-primary">cancelar Inscripcion</button></a></td>
+      {% else %}
+      <td><a href="{{ url_for('socios.alta_disciplina', id_disc=disciplina.id, id_soc=id_socio) }}"><button type="button" class="botonDesbloquear btn btn-primary">Inscribirse</button></a></td>
+      {% endif %}
+    </tr>
+    {% endfor %}   
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block title %}card de Socio{% endblock %}
+
+{% block content %}
+
+
+<div class="container mt-3"></div>
+<div class="container">
+  <div class="row">
+    <h2>card</h2>
+    <tr>
+      <div class="mb-3 btn-primary">
+        NOMBRE: {{ socio.nombre }}
+      </div>
+      <div class="mb-3 btn-primary">
+        APELLIDO: {{ socio.apellido }}
+      </div>
+      <div class="mb-3 btn-primary">
+        DNI: {{ socio.documento }}
+      </div>
+      <div class="mb-3 btn-primary">
+        FECHA INICIO: {{ socio.fecha_inicio.strftime('%Y-%m-%d') }}
+      </div>
+
+      <div class="mb-3 btn-primary">
+        MOROSO:
+
+      {% if socio.moroso %}
+      Si
+      {% else %}
+      No
+      {% endif %}
+    </div>
+
+
+      <td><a href="{{ url_for('socios.modificar_socio', id=socio.id) }}"><button type="button" class="botonModificar btn btn-primary">Modificar socio</button></a></td>
+      <td><a href="{{ url_for('socios.imprimir_socio', id=socio.id) }}"><button type="button" class="botonModificar btn btn-primary">Imprimir Card</button></a></td>
+      {% if socio.estado == False %}
+      <td><a href="{{ url_for('socios.inscripcion_disciplina', id=socio.id) }}"><button type="button" class="botonModificar btn btn-primary">Agregar Disciplina</button></a></td>
+      {% endif %}
+    </tr>
+  </div>
+</div>
+</div>
+   
+
+
+<br><br>
+
+<!--TABLA CUOTAS-->
+<div class="container mt-3"></div>
+<div class="container">
+  <h2>Cuotas Socio</h2>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Mes cuota</th>
+      <th>Monto</th>
+      <th>Tuvo aumento</th>
+      <th>Fecha pagada</th>
+      <th>Estado pago</th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for cuota in cuotas %}
+    <tr>
+      <td>{{ cuota.anomes.strftime('%Y %m') }}</td>
+      <td>{{ cuota.monto }}</td>
+
+      {% if cuota.flagAumento %}
+      <td>Si</td>
+      {% else %}
+      <td>No</td>
+      {% endif %}
+
+      {% if cuota.estado_pago %}
+      <td>{{ cuota.pagado_en.strftime('%Y-%m-%d') }}</td>
+      {% else %}
+      <td>En espera</td>
+      {% endif %}
+
+      {% if not cuota.estado_pago %}
+      <td><a href="{{ url_for('config.pagar_cuotas', idC=cuota.id, idS=socio.id ) }}"><button type="button" class="botonBloquear btn btn-primary">pagar</button></a></td>
+      {% else %}
+      <td>Pagada</td>
+      <td><a href="{{ url_for('config.exportar_cuota', idC=cuota.id, idS=socio.id ) }}"><button type="button" class="botonBloquear btn btn-primary">Exportar PDF</button></a></td>
+      {% endif %}
+    </tr>
+    {% endfor %} 
+    </tbody>
+    </table>
+    </div>
+
+
+{% endblock %}

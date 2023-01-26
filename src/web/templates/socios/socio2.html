@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+
+{% block title %}Lista de personal{% endblock %}
+
+{% block content %}
+<!--BOTONES-->
+<style>
+  body {
+    background-image: url('../static/images/home.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+</style>
+<!--BOTONES-->
+<div class="container mt-3"></div>
+  <div class="container">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <!--ALTA Personal-->
+          <th>
+            <a href="/socios/agregar" class="btn btn-success float-right" onclick="">Agregar Socio</a>
+          </th>
+           <!--BUSQUEDA Personal-->
+          <th>
+            <a href="{{ url_for('socios.index') }}" class="btn btn-success float-right" onclick="">TODOS</a>
+          </th>
+          <th>
+            <a href="{{ url_for('socios.bloqueados') }}" class="btn btn-success float-right" onclick="">BLOQUEADOS</a>
+          </th>
+          <th>
+            <a href="{{ url_for('socios.desbloqueados') }}" class="btn btn-success float-right" onclick="">DESBLOQUEADOS</a>
+          </th>
+          <th>
+            <form action="{{ url_for('socios.buscar_apellido') }}" method="POST">
+              <input type="text" name="apellido" placeholder="apellido"/>
+              <input type="submit" value="buscar" class="btn btn-success float-right">
+            </form>
+          </th>
+          <th>
+            <a href="{{ url_for('socios.generar_csv', url=url) }}" class="btn btn-success float-right" onclick="">Generar CSV</a>
+          </th>
+          <th>
+            <a href="{{ url_for('socios.generar_pdf', url=url) }}" class="btn btn-success float-right" onclick="">Generar PDF</a>
+          </th>
+        </tr>
+      </thead>
+    </table>  
+
+<!--TABLA-->
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Documento</th>
+      <th>Fecha Inicio</th>
+      <th>Moroso</th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for page in socio_pagination.items %}
+    <tr>
+
+      <td>{{ page.nombre }}</td>
+      <td>{{ page.apellido }}</td>
+      <td>{{ page.documento }}</td>
+      <td>{{ page.fecha_inicio.strftime('%Y-%m-%d') }}</td>
+
+      {% if page.moroso %}
+      <td>Si</td>
+      {% else %}
+      <td>No</td>
+      {% endif %}
+      <td><a href="{{ url_for('socios.show_complete', id=page.id) }}"><button type="button" class="botonDesbloquear btn btn-primary">Ver mas</button></a></td>
+      <td><a href="{{ url_for('socios.modificar_socio', id=page.id) }}"><button type="button" class="botonModificar btn btn-primary">Modificar</button></a></td> 
+      {% if not page.estado %}
+      <td><a href="{{ url_for('socios.block_socio', id=page.id) }}"><button type="button" class="botonBloquear btn btn-primary">Bloquear</button></a></td>
+      {% else %}
+      <td><a href="{{ url_for('socios.block_socio', id=page.id) }}"><button type="button" class="botonDesbloquear btn btn-primary">Desbloquear</button></a></td>
+      {% endif %}
+      {% if check_permission(session.user_id,"socio_destroy") %}
+      <td>
+        <a href="{{ url_for('socios.delete_socio', id=page.id) }}">
+          <button type="button" class="botonEliminar btn btn-primary" onclick="_confirm('¿Seguro quieres eliminar este socio?', '/socios')">
+            Eliminar
+          </button>
+        </a>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}   
+  </tbody>
+</table>
+<div class=pagination>
+    {%- for page in socio_pagination.iter_pages() %}
+        {% if page %}
+            {% if page != socio_pagination.page %}
+                <a href="{{ url_for(url,nombre=nombre, page=page) }}"><button type="button" class="btn btn-success float-right">{{ page }}</button></a>
+            {% else %}
+                <strong><button type="button" class="btn btn-success float-right">{{ page }}</button></strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {%- endfor %}
+</div>
+</body>
+</html>
+<script>
+  function _confirm(text, path) {
+    const ok = confirm(text);
+    if (ok) window.location = path;
+  } 
+</script>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}Lista de usuarios registradoss{% endblock %}
+
+{% block content %}
+<table class="index-table box">
+    <thead>
+      <tr>
+        <th>id</th><th>Nombre</th><th>apellido</th><th>email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <th>{{ user.id }}</th><th>{{ user.nombre}}</th><th>{{ user.apellido }}</th><th>{{ user.email }}</th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    </body>
+</html>
+<a href="{{url_for('auth.logout')}}"> Cerrar sesion <br></a>
+<a href="{{url_for('home')}}"> Volver al inicio </a>
+
+{% endblock %}
